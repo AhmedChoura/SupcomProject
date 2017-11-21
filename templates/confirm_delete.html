@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags%}
+{% load urlify %}
+{% block head_title%}{{block.super}} |   {{title}}{%endblock head_title%}
+{% block content %}
+<div class="col-sm-8 col-sm-offset-2">
+    <div class="thumbnail">   
+        <h1>Are you sure ?</h1>
+        <hr>
+        <form method="POST" action=""> {%csrf_token%}
+            <p>Are you sure you want to delete: "{{ object.title}}" ?</p>
+            <input type="submit"  class="btn btn-warning" value="Yes,I'm sure">
+            <a href="/"  class="btn btn-default">No, take me back</a>
+        </form>
+    </div>
+</div>
+{% endblock content %}

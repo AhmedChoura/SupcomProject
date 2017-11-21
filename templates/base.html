@@ -1,0 +1,109 @@
+{% load staticfiles %}
+
+<html ng-app="supcom">
+    <title>
+        {% block head_title%}SupcomBlog{%endblock head_title%}
+    </title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Buttons/2.0.0/css/buttons.min.css">
+    <link rel="stylesheet" href="{% static '/css/base.css' %}">
+    <link rel="stylesheet" href="{% static '/css/comment_style.css' %}">
+    {% block head_extra%}{%endblock head_extra%}
+    <body >
+        
+        <div class="navbar-fixed-top">
+            <ol id="bread1" class="breadcrumb" >
+                <li style="color: #f5dd5d;font-weight: 300; font-size: 24px;">SUP'COM BLOG</li>
+                {% block search%}{% endblock search%}
+                
+                {% if not request.user.is_authenticated%}
+                <li class="pull-right"><a href='{% url "register"%}'> Register</a></li>
+                <li class="pull-right"><a href='{% url "login"%}'> Login&nbsp;</a></li>
+                {%else%}
+                <li class="pull-right"><a href='{% url "logout"%}'> Logout</a></li>
+                {% endif %}
+                <li class="pull-right">WELCOME, {{request.user}}</li>
+            </ol>
+            <ol id="bread2" class="breadcrumb" >
+                <a href='{% url "posts:list"%}'> Home</a>
+                
+                {% block post_detail_link %}{% endblock post_detail_link %}
+                {% block post_thread_link %}{% endblock post_thread_link %}
+                {% if request.user.is_staff or request.user.is_superuser%}
+                <span class="pull-right button-wrap">
+                    <a href='{% url "posts:create"%}' class="button button-pill button-raised button-primary">ADD POST <strong style="font-size: 21px;">&nbsp; +</strong></a>
+                </span>
+                {% endif%}
+            </ol>
+            
+        </div>
+        <div class="container" style="padding-top:4.5cm;padding-left: 0;padding-right: 0;" >
+            {% include "messages_display.html" %}
+            {% block content %}{% endblock content %}
+        </div>
+        
+    
+       
+
+    <!-- js library and framework -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
+    <script src="{% static '/js/app/app.module.js' %}"></script>
+    <script src="{% static '/js/app/app.config.js' %}"></script>
+    <script src="{% static '/js/app/blog-list/blog-list.module.js' %}"></script>
+    <script src="{% static '/js/app/blog-list/blog-list.component.js' %}"></script>
+        <script type="text/javascript">
+            $(document).ready(function () { 
+                // make the image inside the pagedown content responsive of each image in there
+                $('.responsive-image img').each(function () {
+                    $(this).addClass('img-responsive');
+                })
+
+                var titleItem = $('#id_title');
+                function setTitle(value) {
+                    $('#preview-title').text(value);
+                }
+                setTitle(titleItem.val())
+                titleItem.keyup(function () {
+                    newtitle = $(this).val();
+                    setTitle(newtitle)
+                })
+                // get the content form the post form
+                var contentItem = $('#id_content');
+
+                // render to the preview
+                function setContent(value) {
+                    $('#preview-content').html(marked(value));
+                    $('#preview-content img').each(function () {
+                        $(this).addClass('img-responsive')
+                    })
+                }
+              
+                setContent(contentItem.val())
+                // make it dynamic to every change
+                contentItem.keyup(function () {
+                    newContent = $(this).val();
+                    setContent(newContent)
+                })
+                // toggle the reply button
+                $('.comment-reply-btn').click(function (event) {
+                    event.preventDefault();
+                    $(this).parent().next('.comment-reply').fadeToggle();
+                })
+
+                $('.option-reply-btn').click(function (event) {
+                    event.preventDefault();
+                    $(this).parent().next('.option-reply').fadeToggle();
+                })
+             
+             
+            })
+        </script>
+    </body>
+</html>

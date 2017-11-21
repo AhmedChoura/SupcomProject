@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags%}
+{% load urlify %}
+{% block head_title%}{{block.super}} |   {{title}}{%endblock head_title%}
+{% block post_thread_link %}
+<small style="color: white"> > </small><a href="{{comment.content_object.get_absolute_url}}">{{comment.content_object}}</a>
+<small style="color: white"> > </small><a href="{{comment.get_comment_url}}">{{comment.user}} comment</a>
+{% endblock post_thread_link  %}
+{% block content %}
+<div class="col-sm-8 col-sm-offset-2">
+    <div class="thumbnail">
+        <blockquote style="border-left: 5px solid #1569C7;">
+            <p>{{comment.content}}</p>
+            <footer style="color:#1569C7">{{comment.user}} | On {{comment.Created_At|timesince}} ago 
+                {% if comment.children.count > 0 %}| {{comment.children.count}} comment{% if comment.children.count > 1 %}s {% endif%}{% endif%}
+                &nbsp;&nbsp;
+                <a id="ther" href="{{comment.content_object.get_absolute_url}}" class="button button-large button-plain button-border button-circle"><i class="fa fa-address-book-o"></i></a>
+                {% if request.user == comment.user%} 
+                <a id="trash" href="{{comment.get_delete_url}}" class="button button-large button-plain button-border button-circle"><i class="fa fa-trash-o"></i></a>
+                {%endif%}
+            </footer>
+            <hr>
+            <div>
+                {%for comment_children in comment.children%}
+                <blockquote style="border-left: 5px solid #1569C7;">
+                    <p>{{comment_children.content}}</p>
+                    <footer style="color:#1569C7">{{comment_children.user}}
+                    | On {{comment_children.Created_At|timesince}} ago &nbsp;&nbsp;
+                    {% if request.user == comment_children.user%}<a id="trash" href="{{comment_children.get_delete_url}}" class="button button-large button-plain button-border button-circle"><i class="fa fa-trash-o"></i></a>{%endif%}
+                </footer>
+                </blockquote>    
+                <hr>
+                {%endfor%}   
+                {% if request.user.is_authenticated%}
+                <form class="form-inline" method="POST" action=""> {%csrf_token%}
+                    {{comment_form|crispy}}
+                    <input type="hidden" name="parent_id" value="{{comment.id}}">
+                    <button class="button button-primary button-box button-small button-longshadow-right"><i class="fa fa-reply"></i></button>
+                </form>
+                {%else%}
+                <p>You must login to comment</p>
+                {%endif%}
+            </div>
+        </blockquote>
+    </div>
+</div>
+{% endblock content %}

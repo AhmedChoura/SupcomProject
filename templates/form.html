@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags%}
+<!-- adding the css form of pagedown -->
+{% block head_extra%}
+    {{form.media}}
+{%endblock head_extra%}
+{% block content %}
+
+<div class="col-sm-6 col-sm-offset-3 ">
+    <div class="thumbnail">
+        <h2 style="text-align: center">{{title}}</h2>
+        <hr>
+        <form method="POST" action="" > {%csrf_token%}
+            {{form|crispy}}
+            {% if title == "Login" %}
+            <input style="margin-left: 45%" type="submit"  class="btn btn-success" value="{{title}}">
+            {%else%}
+            <input style="margin-left: 40%" type="submit"  class="btn btn-primary" value="{{title}}">
+            {%endif%}
+
+        </form>
+    </div>
+</div>
+{% endblock content %}

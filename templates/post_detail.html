@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags%}
+{% load urlify %}
+{% block head_title%}{{block.super}} |   {{title}}{%endblock head_title%}
+
+{% block post_detail_link %}
+    <li> <small style="color: white"> > </small><a href="{{instance.get_absolute_url}}">{{instance.title}}</a></li>
+{% endblock post_detail_link  %}
+{% block content %}
+<div class="col-sm-8 col-sm-offset-2">
+<div class="thumbnail">
+    <h1>{{title}} <small>{% if instance.draft%}<span style="color:red"> Draft</span>{%endif%} {{instance.publish}}</small></h1>
+    <p>Author: {{instance.user}}</p>
+    {% if instance.image %}
+    <img src="{{instance.image.url}}" class="img-responsive">
+    {% endif %}
+   
+    {% if instance.file%}
+    <br>
+    <button type="button" class="btn btn-aramark-primary" onclick="window.open('{{instance.file.url}}')"><span class="glyphicon glyphicon-save-file"> {{pdf_name}}</span></button>
+    <hr>
+    {% endif %}
+    <br>
+    <div class="responsive-image">{{instance.get_markdown}}</div>
+    <hr>
+    <br> 
+    <div>
+        <h2 class="lead">  Comments</h2>
+        <div>
+            <div class="thumbnail">
+                {% if request.user.is_authenticated%}
+                <form method="POST" action=""> {%csrf_token%}
+                    {{comment_form|crispy}}
+                    <input type="submit"  class="btn btn-default" value="Comment Post">
+                </form>
+                {%else%}
+                <p>You must login to comment</p>
+                {%endif%}
+            </div>
+        </div>
+        {%for comment in comments%}
+        <blockquote style="border-left: 5px solid #1569C7;">
+            <p>{{comment.content}}</p>
+            <footer style="color:#1569C7">{{comment.user}} | On {{comment.Created_At|timesince}} ago 
+                {% if comment.children.count > 0 %}| {{comment.children.count}} comment{% if comment.children.count > 1 %}s {% endif%}{% endif%}
+                | <a class="comment-reply-btn" style="color: black" href="#">Reply</a>
+                | <a style="color: black" href="{{comment.get_comment_url}}">Thread</a> 
+                {% if request.user == comment.user%} | <a href="{{comment.get_delete_url_from_post}}">Delete</a>{%endif%}
+            </footer>
+            <div class="comment-reply" >
+                {%for comment_children in comment.children%}
+                <blockquote style="border-left: 5px solid #1569C7;">
+                    <p>{{comment_children.content}}</p>
+                    <footer style="color:#1569C7">{{comment_children.user}} | On {{comment_children.Created_At|timesince}} ago
+                        {% if request.user == comment_children.user%} | <a href="{{comment_children.get_delete_url_from_post}}">Delete</a>{%endif%}
+                    </footer>
+                </blockquote>    
+                <hr>
+                {%endfor%}   
+                {% if request.user.is_authenticated%}
+                <form method="POST" action=""> {%csrf_token%}
+                    {{comment_form|crispy}}
+                    <input type="hidden" name="parent_id" value="{{comment.id}}">
+                    <input type="submit"  class="btn btn-default" value="Reply">
+                </form>
+                {%else%}
+                <p>You must login to comment</p>
+                {%endif%}
+            </div>
+        </blockquote>
+        <hr>
+        {%endfor%}
+    </div>
+</div>
+</div>
+
+{% endblock content %}

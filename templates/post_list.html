@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block search%}
+
+    <form id="uu" method="GET" action="" > 
+        <div class="input-group">
+            <input class="form-control" type="text" name="q" placeholder="Search posts" value="{{request.GET.q}}">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="submit"><i class="fa fa-search"></i>&nbsp;</button>
+            </span>
+        </div>
+    </form><li></li>
+
+{% endblock search %}
+{% block content %}
+<div class="col-sm-6 col-sm-offset-3">
+{% for obj in contacts %}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="thumbnail">
+        <div class="caption responsive-image">
+            {% if obj.draft%}<h3>Staff Only: Draft {% if obj.publish > today %} | Future post{%endif%}</h3>{%endif%}
+            <h3><a href="{{ obj.get_absolute_url }}">{{obj.title}}</a> <small> {{obj.publish }}</small></h3>
+            <p>Author: {{obj.user}}</p>
+            {% if obj.image %}
+            <img src="{{obj.image.url}}" class="img-responsive">
+            {% endif %}
+
+            {% if obj.file%}
+            <br>
+            <button type="button" class="btn btn-aramark-primary" onclick="window.open('{{obj.file.url}}')"><span class="glyphicon glyphicon-save-file"> pdf to download</span> </button>
+            <hr>
+            {% endif %}
+
+            <p>{{obj.get_markdown|truncatechars_html:50}}</p>
+            <p>
+                <a href="{{ obj.get_absolute_url }}" class="btn btn-primary" role="button">View</a>
+                {% if request.user.is_staff or request.user.is_superuser%}
+                <a href="{{ obj.get_absolute_url_edit }}" class="btn btn-default" role="button">Edit</a>
+                <a href="{{ obj.get_absolute_url_delete }}" class="btn btn-danger" role="button">Delete</a>
+                {%endif%}
+            </p>
+        </div>
+        </div>
+    </div>
+</div>    
+{% endfor %}
+<div class="pagination">
+    <span class="step-links">
+        {% if contacts.has_previous %}
+            <a href="?page={{ contacts.previous_page_number }}{% if request.GET.q %}&q={{request.GET.q}}{% endif %}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ contacts.number }} of {{ contacts.paginator.num_pages }}.
+        </span>
+
+        {% if contacts.has_next %}
+            <a href="?page={{ contacts.next_page_number }}{% if request.GET.q %}&q={{request.GET.q}}{% endif %}">next</a>
+        {% endif %}
+    </span>
+</div>
+</div>
+{% endblock content %}

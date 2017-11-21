@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags%}
+{% load urlify %}
+{% block head_title%}{{block.super}} |   {{title}}{%endblock head_title%}
+
+{% block post_detail_link %}
+    <li> <small style="color: white"> > </small><a href="{{instance.get_absolute_url}}">{{instance.title}}</a></li>
+{% endblock post_detail_link  %}
+{% block content %}
+<div class="row" style="padding: 0;" >
+    <div class="col-sm-8" style="padding-left: 0;">
+        <div class="thumbnail">
+            <h1>{{title}} <small>{% if instance.draft%}<span style="color:red"> Draft</span>{%endif%} {{instance.publish}}</small></h1>
+            <p>Author: {{instance.user}}</p>
+            {% if instance.image %}
+            <img src="{{instance.image.url}}" class="img-responsive">
+            {% endif %}
+        
+            {% if instance.file%}
+            <br>
+            <button type="button" class="btn btn-aramark-primary" onclick="window.open('{{instance.file.url}}')"><span class="glyphicon glyphicon-save-file"> {{pdf_name}}</span></button>
+            <hr>
+            {% endif %}
+            <br>
+            <div class="responsive-image">{{instance.get_markdown}}</div>
+            <hr>
+        </div>
+    </div>
+
+    <div class="col-sm-4 thumbnail" class="actionBox"  >
+        <div class="titleBox"  style="border-bottom-color: gray"> 
+        <label>Comment Box</label>
+        {% verbatim %}
+        <div ng-controller="BlogListController" >
+
+        </div>
+        {% endverbatim %}
+        </div>
+        <div>
+            <ul class="commentList">
+                {%for comment in comments%}
+                <li style=" list-style-type:none">
+                    <div class="commenterImage">
+                        <img src="http://www.vectorsforum.com/uploads/49/viking23.png" />
+                    </div>
+                    <div class="commentText">
+                        <p class="">{{comment.content}}</p> 
+                        <span style="color:#1569C7">{{comment.user}} | On {{comment.Created_At|timesince}} ago 
+                            {% if comment.children.count > 0 %}| {{comment.children.count}} comment{% if comment.children.count > 1 %}s {% endif%}{% endif%}</span>
+                        <span><button class="option-reply-btn"><i class="fa fa-ellipsis-h"></i></button></span>
+                        <p class="option-reply">
+                            <button class="comment-reply-btn button button-large button-plain button-border button-circle "><i class="fa fa-reply"></i></button>
+                            <a id="ther" href="{{comment.get_comment_url}}" class="button button-large button-plain button-border button-circle button-longshadow-left"><i class="fa fa-eye" aria-hidden="true"></i></a>                           
+                            {% if request.user == comment.user%} 
+                            <a id="trash" href="{{comment.get_delete_url_from_post}}" class="button button-large button-plain button-border button-circle"><i class="fa fa-trash-o"></i></a>
+                            {%endif%}
+                        </p>
+                        <div class="comment-reply" >
+                            {%for comment_children in comment.children%}
+                            <div style="padding-left: 15px">
+                                <br>
+                            <blockquote style="border-left: 2px solid #1569C7;">
+                                <div class="commenterImage">
+                                    <img src="http://s207166.gridserver.com/wp-content/uploads/2015/09/Projects_Vikings_Header_Ragnar.png" />
+                                </div>
+                                <div class="commentText" >
+                                    <p>{{comment_children.content}}</p>
+                                    <footer style="color:#1569C7">{{comment_children.user}} | On {{comment_children.Created_At|timesince}} ago
+                                        {% if request.user == comment_children.user%}<a id="trash" href="{{comment_children.get_delete_url_from_post}}" class="button button-large button-plain button-border button-circle"><i class="fa fa-trash-o"></i></a>{%endif%}
+                                    </footer>
+                                </div>
+                            </blockquote>  
+                            </div>  
+                            
+                            {%endfor%}   
+                            {% if request.user.is_authenticated%}
+                            <br>
+                            <form class="form-inline" role="form" method="POST" action="">{%csrf_token%}
+                                <div class="form-group">
+                                    <input type="hidden" name="parent_id" value="{{comment.id}}">
+                                        {{comment_form|crispy}}
+                                </div>
+                                <div class="form-group">
+                                    <button class="button button-primary button-box button-small button-longshadow-right"><i class="fa fa-reply"></i></button>
+                                </div>
+                            </form>
+                            {%else%}
+                            <p>You must login to comment</p>
+                            {%endif%}
+                        </div>
+                    </div>
+                   
+                </li>
+                <hr> 
+                {%endfor%}
+            </ul>
+
+            {% if request.user.is_authenticated%}
+            <form  class="form-inline" role="form" method="POST" action="">{%csrf_token%}
+                <div class="form-group">
+                        {{comment_form|crispy}}
+                </div>
+                <div class="form-group">
+                    <button class="button button-primary button-box button-small button-longshadow-right"><i class="fa fa-plus"></i></button>
+                </div>
+            </form>
+            {%else%}
+            <p>You must login to comment</p>
+            {%endif%}
+
+        </div>
+    </div>
+</div>
+{% endblock content %}
