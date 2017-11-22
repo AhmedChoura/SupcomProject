@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags%}
-{% load urlify %}
+
 {% block head_title%}{{block.super}} |   {{title}}{%endblock head_title%}
 {% block post_thread_link %}
 <small style="color: white"> > </small><a href="{{comment.content_object.get_absolute_url}}">{{comment.content_object}}</a>
