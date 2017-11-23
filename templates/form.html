@@ -12,13 +12,20 @@
         <hr>
         <form method="POST" action="" > {%csrf_token%}
             {{form|crispy}}
-            {% if title == "Login" %}
-            <input style="margin-left: 45%" type="submit"  class="btn btn-success" value="{{title}}">
+            {% if title == "Submit" %}
+            <button id="login" style="margin-left: 45%" type="submit"  class="btn btn-success" >{{title}}</button>
             {%else%}
             <input style="margin-left: 40%" type="submit"  class="btn btn-primary" value="{{title}}">
             {%endif%}
 
         </form>
     </div>
+    {% if title == "Submit" %}
+    <div class="thumbnail" id="result"></div>
+        <a id="trash3"  class="pull-right button  button-box button-large button-longshadow-right"><i class="fa fa-microphone-slash"></i></a>        
+        <a id="trash2"  class="pull-right button button-primary button-box button-large button-longshadow-right"><i class="fa fa-microphone"></i></a>
+    </div>
+    {%endif%}
+    
 </div>
 {% endblock content %}

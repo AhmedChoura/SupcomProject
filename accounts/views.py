@@ -10,10 +10,14 @@ from django.shortcuts import render , redirect
 from django.http import HttpResponse
 from .forms import UserLoginView, UserRegisterView 
 
+
+
 # Create your views here.
+
+
 def login_view (request):
     next = request.GET.get('next')
-    title = "Login"
+    title = "Submit"
     form = UserLoginView(request.POST or None)
     if form.is_valid():
         username = form.cleaned_data.get('username')

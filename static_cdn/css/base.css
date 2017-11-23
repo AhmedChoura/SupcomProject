@@ -7,6 +7,9 @@
 .comment-reply {
     display: none;
 }
+.option-reply {
+    display: none;
+}
 #bread1{
     background: #417690;
     padding: 20px 40px;
@@ -47,7 +50,7 @@
 }
 
 .button-border{
-    background: #222;
+    background: #8bc220;
 
 }
 
@@ -62,5 +65,17 @@
 }
 #ther {
     font-size: 23px;
+    height: 30px;
+}
+
+#trash2 {
+    border: solid 2px #417690   ;
+    font-size: 30px;
+    height: 30px;
+}
+
+#trash3 {
+    border: solid 2px gray ;
+    font-size:30px;
     height: 30px;
 }

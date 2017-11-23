@@ -25,8 +25,6 @@ class UserLoginView(forms.Form):
         return super(UserLoginView,self).clean(*args,**kwargs)
 
 class UserRegisterView(forms.ModelForm):
-    email = forms.EmailField(label='Email address')
-    email2 = forms.EmailField(label='Confirm Email')
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirm password',widget=forms.PasswordInput)
 
@@ -35,21 +33,11 @@ class UserRegisterView(forms.ModelForm):
         fields = [
             'username',
             'email',
-            'email2',
             'password',
             'password2',
 
         ]
 
-    def clean_email2(self):
-        email = self.cleaned_data.get('email')
-        email2 = self.cleaned_data.get('email2')
-        if email != email2 :
-            raise forms.ValidationError('Email must match')
-        email_qs = User.objects.filter(email =email)
-        if email_qs.exists():
-            raise forms.ValidationError('This email has been already registred')
-        return email
 
     def clean_password2(self):
         password = self.cleaned_data.get('password')
