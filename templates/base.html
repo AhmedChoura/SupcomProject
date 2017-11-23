@@ -1,6 +1,8 @@
 {% load staticfiles %}
 
 <html ng-app="supcom">
+        <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0"/>
+
     <title>
         {% block head_title%}SupcomBlog{%endblock head_title%}
     </title>
@@ -16,18 +18,19 @@
     {% block head_extra%}{%endblock head_extra%}
     <body >
         
-        <div class="navbar-fixed-top">
+        <div  class="navbar-fixed-top ">
             <ol id="bread1" class="breadcrumb" >
-                <li style="color: #f5dd5d;font-weight: 300; font-size: 24px;">SUP'COM BLOG</li>
+                <li id="l1" style="color: #f5dd5d;font-weight: 300; font-size: 24px;">SUP'COM BLOG</li>
                 {% block search%}{% endblock search%}
                 
                 {% if not request.user.is_authenticated%}
-                <li class="pull-right"><a href='{% url "register"%}'> Register</a></li>
-                <li class="pull-right"><a href='{% url "login"%}'> Login&nbsp;</a></li>
+                <li  class="pull-right"><a href='{% url "register"%}'> Register</a></li>
+                <li  class="pull-right"><a href='{% url "login"%}'> Login&nbsp;</a></li>
                 {%else%}
-                <li class="pull-right"><a href='{% url "logout"%}'> Logout</a></li>
-                {% endif %}
+                <li  class="pull-right"><a href='{% url "logout"%}'> Logout</a></li>
                 <li class="pull-right">WELCOME, {{request.user}}</li>
+                {% endif %}
+                
             </ol>
             <ol id="bread2" class="breadcrumb" >
                 <a href='{% url "posts:list"%}'> Home</a>
@@ -42,7 +45,7 @@
             </ol>
             
         </div>
-        <div class="container" style="padding-top:4.5cm;padding-left: 0;padding-right: 0;" >
+        <div id="cc" class="container" style="padding-top:4.5cm;padding-left: 0;padding-right: 0;" >
             {% include "messages_display.html" %}
             {% block content %}{% endblock content %}
         </div>
@@ -107,6 +110,7 @@
              
              
             })
+            
         </script>
     </body>
 </html>

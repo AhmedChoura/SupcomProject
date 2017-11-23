@@ -5,17 +5,8 @@
     {{form.media}}
 {%endblock head_extra%}
 {% block content %}
-<div class="col-sm-6">
-    <div class="thumbnail">
-        <h2 style="text-align: center">Preview</h2>
-        <hr>
-        <div class="content-preview">
-            <h3 id="preview-title"></h3>
-            <p id="preview-content"></p>
-        </div>
-    </div>
-</div>
-<div class="col-sm-6">
+
+<div class="col-sm-6 col-xs-12">
     <div class="thumbnail">
         <h2 style="text-align: center">Form</h2>
         <hr>
@@ -25,4 +16,14 @@
         </form>
     </div>
 </div>
+<div class="col-sm-6 col-xs-12">
+        <div class="thumbnail">
+            <h2 style="text-align: center">Preview</h2>
+            <hr>
+            <div class="content-preview">
+                <h3 id="preview-title"></h3>
+                <p id="preview-content"></p>
+            </div>
+        </div>
+    </div>
 {% endblock content %}

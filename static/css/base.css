@@ -79,3 +79,19 @@
     font-size:30px;
     height: 30px;
 }
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) {
+    #l1 {
+        padding-left: 25px;
+    }
+
+    #bread1{
+        padding:30px 40px;
+    }
+    #cc{
+        margin-top: 1cm;
+    }
+}
+
